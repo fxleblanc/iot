@@ -52,6 +52,7 @@ class DHT11:
 
         # parse lengths of all data pull up periods
         pull_up_lengths = self.__parse_data_pull_up_lengths(data)
+        print('pull up len %d ' % len(pull_up_lengths))
 
         # if bit count mismatch, return error (4 byte data + 1 byte checksum)
         if len(pull_up_lengths) != 40:
