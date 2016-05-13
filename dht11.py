@@ -90,7 +90,7 @@ class DHT11:
             return DHT11Result(DHT11Result.ERR_CRC, 0, 0)
 
         # ok, we have valid data, return it
-        print('works: ' + data)
+        print('works: ' + str(data))
         return DHT11Result(DHT11Result.ERR_NO_ERROR, the_bytes[2], the_bytes[0])
 
     def __send_and_sleep(self, output, sleep):
