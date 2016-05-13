@@ -47,6 +47,7 @@ class DHT11:
         # collect data into an array
         data = self.__collect_input()
         from itertools import groupby
+        # Group data by consecutives
         print([x[0] for x in groupby(data)])
 
         # parse lengths of all data pull up periods
@@ -190,4 +191,3 @@ class DHT11:
 
     def __calculate_checksum(self, the_bytes):
         return the_bytes[0] + the_bytes[1] + the_bytes[2] + the_bytes[3] & 255
-
