@@ -67,10 +67,10 @@ class DHT11:
         # calculate checksum and check
         checksum = self.__calculate_checksum(the_bytes)
         if the_bytes[4] != checksum:
-            return DHT11Result(DHT11Result.ERR_CRC, 0, 0)
+            return DHT11Result(error=DHT11Result.ERR_CRC)
 
         # ok, we have valid data, return it
-        return DHT11Result(DHT11Result.ERR_NO_ERROR, the_bytes[2], the_bytes[0])
+        return DHT11Result(the_bytes[2], the_bytes[0])
 
     def __send_and_sleep(self, output, sleep):
         GPIO.output(self.__pin, output)
