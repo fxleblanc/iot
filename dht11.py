@@ -62,7 +62,7 @@ class DHT11:
 
         # pull down to low
         GPIO.output(self.__pin, GPIO.LOW)
-        time.sleep(0.03)
+        time.sleep(0.015)
         # change to input using pull up
         GPIO.setup(self.__pin, GPIO.IN, GPIO.PUD_UP)
 
