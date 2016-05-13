@@ -101,7 +101,7 @@ class DHT11:
         unchanged_count = 0
 
         # this is used to determine where is the end of the data
-        max_unchanged_count = 100
+        max_unchanged_count = 255
 
         last = -1
         data = []
