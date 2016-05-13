@@ -135,52 +135,30 @@ class DHT11:
         current_length = 0  # will contain the length of the previous period
 
         for i in range(len(data)):
-
             current = data[i]
             current_length += 1
 
-            if state == STATE_INIT_PULL_DOWN:
-                if current == GPIO.LOW:
+            if current == GPIO.LOW:
+                if state == STATE_INIT_PULL_DOWN:
                     # ok, we got the initial pull down
                     state = STATE_INIT_PULL_UP
-                    continue
-                else:
-                    continue
-
-            if state == STATE_INIT_PULL_UP:
-                if current == GPIO.HIGH:
-                    # ok, we got the initial pull up
-                    state = STATE_DATA_FIRST_PULL_DOWN
-                    continue
-                else:
-                    continue
-
-            if state == STATE_DATA_FIRST_PULL_DOWN:
-                if current == GPIO.LOW:
-                    # we have the initial pull down, the next will be the data pull up
+                elif state == STATE_DATA_FIRST_PULL_DOWN:
+                    # we have the initial pull down
+                    # the next will be the data pull up
                     state = STATE_DATA_PULL_UP
-                    continue
-                else:
-                    continue
-
-            if state == STATE_DATA_PULL_UP:
-                if current == GPIO.HIGH:
-                    # data pulled up, the length of this pull up will determine whether it is 0 or 1
-                    current_length = 0
-                    state = STATE_DATA_PULL_DOWN
-                    continue
-                else:
-                    continue
-
-            if state == STATE_DATA_PULL_DOWN:
-                if current == GPIO.LOW:
-                    # pulled down, we store the length of the previous pull up period
+                elif state == STATE_DATA_PULL_DOWN:
+                    # we store the length of the previous pull up period
                     lengths.append(current_length)
                     state = STATE_DATA_PULL_UP
-                    continue
-                else:
-                    continue
-
+            if current == GPIO.HIGH:
+                if state == STATE_INIT_PULL_UP:
+                    # ok, we got the initial pull up
+                    state = STATE_DATA_FIRST_PULL_DOWN
+                elif state == STATE_DATA_PULL_UP:
+                    # the length of this pull up will determine
+                    # whether it is 0 or 1
+                    current_length = 0
+                    state = STATE_DATA_PULL_DOWN
         return lengths
 
     def __calculate_bits(self, pull_up_lengths):
