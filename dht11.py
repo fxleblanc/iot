@@ -105,7 +105,7 @@ class DHT11:
 
         last = -1
         data = []
-        for i in range(0, 40):
+        while True:
             current = GPIO.input(self.__pin)
             data.append(current)
             if last != current:
