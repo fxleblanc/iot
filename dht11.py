@@ -48,15 +48,13 @@ class DHT11:
         data = self.__collect_input()
         from itertools import groupby
         # Group data by consecutives
-        print([x[0] for x in groupby(data)])
+        print(len([x[0] for x in groupby(data)]))
 
         # parse lengths of all data pull up periods
         pull_up_lengths = self.__parse_data_pull_up_lengths(data)
 
         # if bit count mismatch, return error (4 byte data + 1 byte checksum)
         if len(pull_up_lengths) != 40:
-            print(len(pull_up_lengths))
-            print(data)
             return DHT11Result(error=DHT11Result.ERR_MISSING_DATA)
 
         # calculate bits from lengths of the pull up periods
@@ -71,7 +69,6 @@ class DHT11:
             return DHT11Result(DHT11Result.ERR_CRC, 0, 0)
 
         # ok, we have valid data, return it
-        print('works: ' + str(data))
         return DHT11Result(DHT11Result.ERR_NO_ERROR, the_bytes[2], the_bytes[0])
 
     def __send_and_sleep(self, output, sleep):
