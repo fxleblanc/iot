@@ -108,8 +108,6 @@ class DHT11:
         while True:
             current = GPIO.input(self.__pin)
             data.append(current)
-            if current == 0:
-                continue
 
             if last != current:
                 unchanged_count = 0
