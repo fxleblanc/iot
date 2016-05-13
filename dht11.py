@@ -105,7 +105,7 @@ class DHT11:
 
         last = -1
         data = []
-        while unchanged_count > max_unchanged_count:
+        while unchanged_count < max_unchanged_count:
             current = GPIO.input(self.__pin)
             data.append(current)
 
