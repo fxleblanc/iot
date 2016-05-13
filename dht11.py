@@ -1,25 +1,6 @@
 """
-MIT License
-
-Copyright (c) 2016 Zoltan Szarvas
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The following code is adapted from https://github.com/szazo/DHT11_Python .
+Theses modifications are under the GPLv3.
 """
 
 import time
@@ -33,21 +14,17 @@ class DHT11Result:
     ERR_MISSING_DATA = 1
     ERR_CRC = 2
 
-    error_code = ERR_NO_ERROR
-    temperature = -1
-    humidity = -1
-
-    def __init__(self, error_code, temperature, humidity):
-        self.error_code = error_code
+    def __init__(self, temperature=None, humidity=None, error=None):
         self.temperature = temperature
         self.humidity = humidity
+        self.error = error
 
     def is_valid(self):
-        return self.error_code == DHT11Result.ERR_NO_ERROR
+        return self.error == DHT11Result.ERR_NO_ERROR
 
 
 class DHT11:
-    'DHT11 sensor reader class for Raspberry'
+    'DHT11 sensor reader class for Rpi.GPIO library (works with Pine64 port)'
 
     __pin = 0
 
@@ -57,17 +34,20 @@ class DHT11:
     def read(self):
         GPIO.setup(self.__pin, GPIO.OUT)
 
-        # send initial high
+        # send initial high to DHT11
         self.__send_and_sleep(GPIO.HIGH, 0.05)
 
         # pull down to low
         GPIO.output(self.__pin, GPIO.LOW)
-        time.sleep(0.015)
-        # change to input using pull up
+        time.sleep(0.02)
+
+        # listen to DHT11
         GPIO.setup(self.__pin, GPIO.IN, GPIO.PUD_UP)
 
         # collect data into an array
         data = self.__collect_input()
+        from itertools import groupby
+        print([x[0] for x in groupby(data)])
 
         # parse lengths of all data pull up periods
         pull_up_lengths = self.__parse_data_pull_up_lengths(data)
@@ -76,7 +56,7 @@ class DHT11:
         if len(pull_up_lengths) != 40:
             print(len(pull_up_lengths))
             print(data)
-            return DHT11Result(DHT11Result.ERR_MISSING_DATA, 0, 0)
+            return DHT11Result(error=DHT11Result.ERR_MISSING_DATA)
 
         # calculate bits from lengths of the pull up periods
         bits = self.__calculate_bits(pull_up_lengths)
@@ -210,3 +190,4 @@ class DHT11:
 
     def __calculate_checksum(self, the_bytes):
         return the_bytes[0] + the_bytes[1] + the_bytes[2] + the_bytes[3] & 255
+
