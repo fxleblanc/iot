@@ -47,9 +47,9 @@ class DHT11:
         # collect data into an array
         data = self.__collect_input()
         from itertools import groupby
-        # Group data by consecutives
+
         print('len %d' % len([x[0] for x in groupby(data)]))
-        print([x[0] for x in groupby(data)])
+        print(['%d %d' % (x[0], len(x)) for x in groupby(data)])
 
         # parse lengths of all data pull up periods
         pull_up_lengths = self.__parse_data_pull_up_lengths(data)
