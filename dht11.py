@@ -61,10 +61,10 @@ class DHT11:
         self.__send_and_sleep(GPIO.HIGH, 0.05)
 
         # pull down to low
-        self.__send_and_sleep(GPIO.LOW, 0.02)
-
+        GPIO.output(self.__pin, GPIO.LOW)
         # change to input using pull up
         GPIO.setup(self.__pin, GPIO.IN, GPIO.PUD_UP)
+        time.sleep(0.02)
 
         # collect data into an array
         data = self.__collect_input()
