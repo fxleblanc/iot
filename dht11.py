@@ -14,7 +14,7 @@ class DHT11Result:
     ERR_MISSING_DATA = 1
     ERR_CRC = 2
 
-    def __init__(self, temperature=None, humidity=None, error=None):
+    def __init__(self, temperature=None, humidity=None, error=ERR_NO_ERROR):
         self.temperature = temperature
         self.humidity = humidity
         self.error = error
