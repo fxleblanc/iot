@@ -97,7 +97,6 @@ class DHT11:
         time.sleep(sleep)
 
     def __collect_input(self):
-
         # collect the data while unchanged found
         unchanged_count = 0
 
@@ -115,8 +114,8 @@ class DHT11:
             else:
                 unchanged_count += 1
                 if unchanged_count > max_unchanged_count:
-                    print('break')
-
+                    break
+        print(len(data))
         return data
 
     def __parse_data_pull_up_lengths(self, data):
