@@ -120,7 +120,6 @@ class DHT11:
         return data
 
     def __parse_data_pull_up_lengths(self, data):
-
         STATE_INIT_PULL_DOWN = 1
         STATE_INIT_PULL_UP = 2
         STATE_DATA_FIRST_PULL_DOWN = 3
@@ -132,8 +131,7 @@ class DHT11:
         lengths = []  # will contain the lengths of data pull up periods
         current_length = 0  # will contain the length of the previous period
 
-        for i in range(len(data)):
-            current = data[i]
+        for current in data:
             current_length += 1
 
             if current == GPIO.LOW:
@@ -148,7 +146,7 @@ class DHT11:
                     # we store the length of the previous pull up period
                     lengths.append(current_length)
                     state = STATE_DATA_PULL_UP
-            if current == GPIO.HIGH:
+            elif current == GPIO.HIGH:
                 if state == STATE_INIT_PULL_UP:
                     # ok, we got the initial pull up
                     state = STATE_DATA_FIRST_PULL_DOWN
@@ -157,6 +155,8 @@ class DHT11:
                     # whether it is 0 or 1
                     current_length = 0
                     state = STATE_DATA_PULL_DOWN
+            else:
+                print('invalid state at %d' % current_length)
         return lengths
 
     def __calculate_bits(self, pull_up_lengths):
