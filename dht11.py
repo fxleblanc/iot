@@ -106,7 +106,7 @@ class DHT11:
 
         last = -1
         data = []
-        while True:
+        for i in range(0, 40):
             current = GPIO.input(self.__pin)
             data.append(current)
             if last != current:
@@ -115,7 +115,7 @@ class DHT11:
             else:
                 unchanged_count += 1
                 if unchanged_count > max_unchanged_count:
-                    break
+                    print('break')
 
         return data
 
